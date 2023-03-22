@@ -1,14 +1,23 @@
 #!/usr/bin/python3
-""" Function that deploys """
+"""
+This module contains a script a Fabric script
+(based on the file 3-deploy_web_static.py)that deletes out-of-date archives,
+using the function do_clean:
+- Prototype: def do_clean(number=0):
+    - number is the number of the archives, including the most recent, to keep.
+      - If number is 0 or 1, keep only the most recent version of your archive.
+      - if number is 2, keep the most recent, and second most recent versions
+        of your archive etc.
+"""
 from fabric.api import *
 
 
-env.hosts = ['35.231.33.237', '34.74.155.163']
+env.hosts = ['3.236.55.133', '44.192.95.89']
 env.user = "ubuntu"
 
 
 def do_clean(number=0):
-    """ CLEANS """
+    """ Function to clean the versions folder """
 
     number = int(number)
 
