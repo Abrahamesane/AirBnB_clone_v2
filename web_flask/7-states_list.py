@@ -1,27 +1,31 @@
 #!/usr/bin/python3
-""" Starts a Flash Web Application """
+""" Starts a Flask web application listening on 0.0.0.0, port 5000
+Routes:
+    /states_list: display a HTML page: (inside the tag BODY)
+        H1 tag: “States”
+        UL tag: with the list of all State objects present in DBStorage
+                sorted by name (A->Z) tip
+            LI tag: description of one State: <state.id>: <B><state.name></B>
+"""
 from models import storage
-from models.state import State
-from flask import Flask, render_template
+from flask import Flask
+from flask import render_template
+
 app = Flask(__name__)
-# app.jinja_env.trim_blocks = True
-# app.jinja_env.lstrip_blocks = True
+
+
+@app.route("/states_list", strict_slashes=False)
+def states_list():
+    """ Displays an HTML page with a list of all State objects in DBStorage """
+    states = storage.all("State")
+    return render_template("7-states_list.html", states=states)
 
 
 @app.teardown_appcontext
-def close_db(error):
-    """ Remove the current SQLAlchemy Session """
+def teardown(exc):
+    """ Remove the current SQLAlchemy session """
     storage.close()
 
 
-@app.route('/states_list', strict_slashes=False)
-def states_list():
-    """ displays a HTML page with a list of states """
-    states = storage.all(State).values()
-    states = sorted(states, key=lambda k: k.name)
-    return render_template('7-states_list.html', states=states)
-
-
 if __name__ == "__main__":
-    """ Main Function """
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host="0.0.0.0")
